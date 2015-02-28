@@ -15,7 +15,7 @@ ENV PATH /usr/src/go/bin:$PATH
 RUN mkdir -p /go
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:$PATH
-RUN go get golang.org/x/tools/cmd/vet
+RUN go get golang.org/x/tools/cmd/vet golang.org/x/tools/cmd/cover
 
 # Install docker.
 RUN curl https://get.docker.io/builds/Linux/x86_64/docker-latest -o /usr/local/bin/docker
