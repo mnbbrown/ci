@@ -3,7 +3,7 @@ FROM debian:wheezy
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends curl git subversion mercurial ca-certificates bzip2
 
-ENV BUILD_DEPS autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm3 libgdbm-dev
+ENV BUILD_DEPS autoconf bison build-essential libssl-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm3 libgdbm-dev
 RUN apt-get update && apt-get install -y --no-install-recommends $BUILD_DEPS && rm -rf /var/lib/apt/lists/*
 
 # Install golang.
@@ -18,8 +18,19 @@ ENV PATH $GOPATH/bin:$PATH
 RUN go get golang.org/x/tools/cmd/vet golang.org/x/tools/cmd/cover
 
 # Install docker.
-RUN curl https://get.docker.io/builds/Linux/x86_64/docker-latest -o /usr/local/bin/docker
-RUN chmod +x /usr/local/bin/docker
+RUN apt-get update && apt-get install -y apparmor
+RUN curl -s https://get.docker.io/ubuntu/ | sh  
+ADD wrapdocker /usr/local/bin/wrapdocker
+RUN chmod +x /usr/local/bin/wrapdocker
+VOLUME /var/lib/docker
+
+# Install libyaml for Ruby
+RUN mkdir -p /usr/src/yaml && curl -sSL http://pyyaml.org/download/libyaml/yaml-0.1.6.tar.gz | tar -vzxC /usr/src/yaml --strip-components=1 \
+	&& cd /usr/src/yaml \
+	&& ./configure \
+	&& make
+	&& make install
+	&& rm -rf /usr/src/yaml
 
 # Install ruby
 ENV RUBY_VERSION 2.2.0
@@ -39,4 +50,4 @@ RUN gem install fpm
 
 # Cleanup
 RUN apt-get remove -y --purge $BUILD_DEPS
-RUN apt-get update && apt-get install -y --no-install-recommends git && apt-get -y --purge autoremove && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install --force-yes -y --no-install-recommends openssh-client git libffi-dev && apt-get -y --purge autoremove && apt-get clean && rm -rf /var/lib/apt/lists/*
