@@ -1,4 +1,4 @@
-ure that all nodes in /dev/mapper correspond to mapped devices currently loaded by the device-mapper kernel driver
+#Sure that all nodes in /dev/mapper correspond to mapped devices currently loaded by the device-mapper kernel driver
 dmsetup mknodes
 
 # First, make sure that cgroups are mounted correctly.
