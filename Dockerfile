@@ -6,5 +6,6 @@ RUN apk update && apk add bash curl git mercurial bzr go@community>=1.5 ca-certi
 # Install golang.
 ENV GOROOT /usr/lib/go
 ENV GOPATH /go
-ENV GOBIN /gopath/bin
-RUN go get golang.org/x/tools/cmd/vet golang.org/x/tools/cmd/cover
+ENV GOBIN /go/bin
+ENV PATH $GOBIN:$PATH
+RUN go get -u golang.org/x/tools/cmd/vet golang.org/x/tools/cmd/cover github.com/jteeuwen/go-bindata/...
