@@ -1,0 +1,20 @@
+build:
+    image: mnbbrown/ci:latest
+
+publish:
+    docker:
+        repo: mnbbrown/ci
+        username: mnbbrown
+        password: $$DOCKER_HUB_PASSWORD
+        email: me@matthewbrown.io
+        tag:
+            - $$COMMIT
+            - latest
+        storage_driver: overlay
+
+notify:
+    slack:
+        webhook_url: https://hooks.slack.com/services/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
+        channel: devops
+        username: drone
+
